@@ -1,0 +1,39 @@
+# Temporary files — always reproducible, never sync
+temp/
+
+# Large data files — store on Dropbox/Google Drive, not version control
+data/
+
+# Stata output files
+*.log
+*.smcl
+
+# OS / editor artifacts
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*~
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+
+# R
+.Rhistory
+.RData
+.Rproj.user/
+
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.out
+*.toc
