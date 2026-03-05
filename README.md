@@ -1,110 +1,158 @@
-# Project Repository
+# Project Name
 
-Structure follows **Gentzkow & Shapiro (2014)** and the associated internal RA manual.
-References: [Code and Data Guide](https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf) · [GS Lab RA Manual](https://github.com/gslab-econ/ra-manual/wiki)
+## Overview
+Brief description of the project.
 
----
+## Structure
+This project follows the directory conventions from Franklin Qian's RA Manual
+(itself based on Gentzkow & Shapiro's *Code and Data for the Social Sciences*).
 
-## Directory Structure
+The top-level folders are `source/`, `data/`, `output/`, and `temp/`.
+Each mirrors the three pipeline stages: `raw/`, `derived/`, and `analysis/`.
+Individual tasks get their own named subfolder within each stage.
 
 ```
 project/
-│
-├── source/                         # All code scripts
-│   ├── raw/
-│   │   └── <task_name>/            # e.g., process_redfin_raw/
-│   ├── derived/
-│   │   └── <task_name>/            # e.g., preclean_redfin/
-│   └── analysis/
-│       └── <task_name>/            # e.g., sumstats_main/
-│
-├── data/                           # All datasets (standalone names)
-│   ├── raw/
-│   │   └── <dataset_name>/         # e.g., redfin_dta/
-│   ├── derived/
-│   │   └── <dataset_name>/         # e.g., redfin_event_trees/
-│   └── analysis/
-│       └── <task_name>/            # rare — final datasets for replication
-│
-├── output/                         # Generated outputs (mirrors source/ names)
-│   ├── raw/
-│   │   └── <task_name>/            # logs from raw tasks
-│   ├── derived/
-│   │   └── <task_name>/            # logs + sanity-check tables
-│   └── analysis/
-│       └── <task_name>/            # tables (.tex/.csv) and figures (.eps/.pdf)
-│
-├── temp/                           # Intermediate files (safe to delete, don't sync)
-│   ├── raw/
+├── source/                   All code scripts  (.do  .R  .py  .ipynb)
+│   ├── 0_raw/                Ingest raw data
+│   │   └── <task_name>/      One subfolder per task
+│   ├── 1_derived/            Clean and process data
 │   │   └── <task_name>/
-│   ├── derived/
+│   ├── 2_analysis/           Regressions, stats, tables, figures
 │   │   └── <task_name>/
-│   └── analysis/
-│       └── <task_name>/
+│   └── lib/                  Shared helpers  (.ado  .R  .py)
 │
-├── docs/
-│   └── weekly_reports/
-│       └── <your_name>/            # versioned weekly progress reports
+├── data/                     All data files (never edited by hand)
+│   ├── 0_raw/                Raw data, named by dataset (not task)
+│   └── 1_derived/            Cleaned / processed datasets
 │
-├── Documentation/                  # Reference PDFs and project docs
-└── README.md
+├── output/                   All non-data outputs, mirroring source/
+│   ├── 0_raw/                Log files from raw-stage scripts
+│   ├── 1_derived/            Log files + summary stats from cleaning
+│   └── 2_analysis/
+│       ├── tables/           Final tables (.tex, .csv, .xlsx)
+│       └── figures/          Final figures (.pdf, .png)
+│
+├── temp/                     Temporary intermediate files
+│
+├── docs/                     Documentation & reports
+│   ├── weekly_reports/       RA progress reports (versioned by date)
+│   └── codebooks/            Data dictionaries, use agreements
+│
+├── run_all.py                Master script – runs entire pipeline
+└── install.R                 R package list (run once to install)
 ```
 
----
+### Naming convention for tasks
+Task folders use **verb + noun** in snake_case, e.g. `process_redfin_raw`,
+`preclean_redfin`, `sumstats_main`. The code, data output, and log output
+for a task called `<task>` at stage `<stage>` live at:
 
-## Pipeline Logic
+| What          | Path                              |
+|---------------|-----------------------------------|
+| Code scripts  | `source/<0_raw\|1_derived\|2_analysis>/<task>/` |
+| Log / output  | `output/<0_raw\|1_derived\|2_analysis>/<task>/` |
+| Data files    | `data/<0_raw\|1_derived>/<dataset_name>/`        |
 
-```
-data/raw/  ──►  source/derived/<task>/  ──►  data/derived/  ──►  source/analysis/<task>/  ──►  output/analysis/
-```
+## Replication
 
-- **`source/raw/`** tasks: ingest and lightly process raw data → write to `data/raw/`
-- **`source/derived/`** tasks: clean and transform → write to `data/derived/`
-- **`source/analysis/`** tasks: regressions, tables, figures → write to `output/analysis/`
-
----
-
-## Key Rules
-
-| Rule | Description |
-|------|-------------|
-| **Separate by function** | `source/raw/` → `source/derived/` → `source/analysis/` |
-| **Mirror task names** | `source/raw/<task>/` logs go to `output/raw/<task>/`; temp to `temp/raw/<task>/` |
-| **Standalone data names** | `data/` folders use dataset names, not task names — they're shared across tasks |
-| **Relative paths only** | Never hardcode `/Users/yourname/...`; always use paths relative to project root |
-| **Always log** | Every script writes a log to the corresponding `output/<stage>/<task>/` folder |
-| **Don't sync temp/** | `temp/` is excluded from Dropbox and version control |
-
----
-
-## Naming Conventions
-
-- All folder and file names: **lowercase with underscores** (`preclean_redfin`, not `PrecleanRedfin`)
-- Task folders: **verb + noun** describing what the script does (`process_redfin_raw`, `sumstats_main`)
-- Script named same as its folder: `source/raw/process_redfin_raw/process_redfin_raw.do`
-- Variables: lowercase with underscores (`sg_poi_id` not `SafeGraphID`)
-
----
-
-## Workflow Example
-
+**Run the full pipeline** from the project root:
 ```bash
-# From the project root:
-stata-mp -e do ./source/raw/process_redfin_raw/process_redfin_raw.do
-stata-mp -e do ./source/derived/preclean_redfin/preclean_redfin.do
-stata-mp -e do ./source/analysis/sumstats_main/sumstats_main.do
+python run_all.py
 ```
 
-Each script uses relative paths internally, e.g.:
-```stata
-use "../../data/raw/redfin_dta/redfin.dta"
-log using "../../output/raw/process_redfin_raw/process_redfin_raw.log", replace
+**Run a single stage:**
+```bash
+python run_all.py --stage 0    # 0_raw
+python run_all.py --stage 1    # 1_derived
+python run_all.py --stage 2    # 2_analysis
+python run_all.py --dry-run    # print commands without executing
 ```
+
+`run_all.py` dispatches each script by file extension:
+
+| Extension | Executor |
+|-----------|----------|
+| `.do`     | `stata-mp -e do <file>` |
+| `.R`      | `Rscript --vanilla <file>` |
+| `.ipynb`  | `jupyter nbconvert --execute --inplace <file>` |
+
+Add new tasks by appending their script path to the relevant stage list in `run_all.py`'s `PIPELINE` dict. Scripts prefixed with `_` are treated as templates and skipped automatically.
+
+## Data Sources
+<!-- For each dataset document: source, date obtained, version, terms of use -->
+
+## Weekly Reports (Quarto)
+
+Weekly reports are written in Quarto (`.qmd`) and compiled to PDF.
+
+| Item           | Location                                    |
+|----------------|---------------------------------------------|
+| Template       | `docs/weekly_reports/_report_template.qmd`          |
+| Reports        | `docs/weekly_reports/YYYYMMDD_task<N>_<purpose>_<name>.qmd` |
+| Rendered PDFs  | Committed alongside the `.qmd` source       |
+
+Date-first naming (`YYYYMMDD_...`) ensures VS Code sorts reports newest-to-oldest automatically.
+
+**Compile a report:**
+```bash
+quarto render docs/weekly_reports/YYYYMMDD_task<N>_<purpose>_<name>.qmd
+```
+
+Path references inside `.qmd` files use relative paths from `docs/weekly_reports/`:
+- `../../data/1_derived/` for processed data
+- `../../output/2_analysis/figures/` for figures
+- `../../output/2_analysis/tables/` for LaTeX tables
 
 ---
 
-## Weekly Reports
+## R Environment
 
-Save progress reports to `docs/weekly_reports/<your_name>/`.
-Naming: `<task_or_purpose>_<your_name>_<YYYY-MM-DD>.pdf`
-Also version to the project Dropbox under `/docs/weekly_reports/<your_name>/`.
+| Item           | Value                                        |
+|----------------|----------------------------------------------|
+| Package list   | `install.R`                                  |
+| Lockfile       | `renv.lock` (generated by `renv`)            |
+
+**Setup:**
+```r
+source("install.R")        # quick install without renv
+# --- or, for full reproducibility ---
+install.packages("renv")
+renv::restore()             # installs exact versions from renv.lock
+```
+
+When you add a package, add it to `install.R` and run `renv::snapshot()` to update `renv.lock`.
+
+---
+
+## Python Environment
+
+| Item            | Value                              |
+|-----------------|------------------------------------|
+| Python version  | 3.13.5                             |
+| Package list    | `requirements.txt`                 |
+| Virtual env     | `.venv/` (gitignored)              |
+
+**Setup:**
+```bash
+python -m venv .venv
+.venv\Scripts\activate        # Windows
+pip install -r requirements.txt
+```
+
+When you add or update a package, pin it in `requirements.txt` (`pip freeze` the
+specific package, not the whole environment). Record any version upgrades in your
+commit message so collaborators know to re-install.
+
+---
+
+## Notes
+- Raw data in `data/raw/` is **read-only**; never edit those files.
+- All files in `data/derived/` and `output/` are produced by code
+  and can be deleted and regenerated by rerunning `run_all.py`.
+- `temp/` files are committed; clean them up manually when no longer needed.
+- **Always use relative paths.** Never hard-code an absolute path in any script (`.do`, `.R`, `.py`, `.ipynb`).
+- **Working directory** for all scripts is the **project root**. `run_all.py` enforces this automatically via `os.chdir(ROOT)`.
+- Always save log files; they go in `output/<0_raw|1_derived|2_analysis>/<task>/`.
+- `run_all.py` writes a date-stamped master log to `output/run_all_<YYYYMMDD_HHMMSS>.log`.
+

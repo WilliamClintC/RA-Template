@@ -1,23 +1,34 @@
 # source/
 
-All **code scripts** live here, organized by pipeline stage.
+All code scripts live here, organized by pipeline stage.
+Supported languages: **Stata** (`.do`), **R** (`.R`), **Python** (`.py`), **Jupyter** (`.ipynb`).
 
-| Subfolder | Purpose |
-|-----------|---------|
-| `raw/` | Scripts that read raw source data and produce cleaned datasets in `data/raw/` |
-| `derived/` | Scripts that transform `data/raw/` inputs into derived datasets in `data/derived/` |
-| `analysis/` | Scripts that consume `data/raw/` and/or `data/derived/` to produce tables and figures in `output/analysis/` |
+## Task naming convention
+Each task gets its own subfolder: **verb + noun**, snake_case.
+Examples: `process_redfin_raw`, `preclean_redfin`, `sumstats_main`
 
-## Naming tasks
+| Stage         | What it does                                      | Data flows to           | Languages          |
+|---------------|---------------------------------------------------|-------------------------|-----------------|
+| `0_raw/`      | Ingest raw files, convert formats, append         | `data/0_raw/`           | `.do` `.py`     |
+| `1_derived/`  | Clean, reshape, merge, transform                  | `data/1_derived/`       | `.do` `.py` `.R`|
+| `2_analysis/` | Regressions, summary stats, tables, figures       | `output/2_analysis/`    | `.R` `.ipynb`   |
 
-Each task gets its own subfolder named **`verb_noun`** (lowercase, underscores) — e.g., `process_redfin_raw`, `preclean_redfin`, `sumstats_main`.
+## Working directory
+All scripts assume the **project root** as the working directory.
+- **Stata:** `stata-mp -e do source/0_raw/<task>/<task>.do` (or add to `run_all.py`)
+- **R:** `setwd(here::here())` at top of script, or open via `.Rproj`
+- **Jupyter:** launch `jupyter notebook` from the project root terminal
 
-The task name mirrors across `source/`, `output/`, and (if needed) `temp/`:
+Use relative paths from the project root in every script. Never use absolute paths.
 
-```
-source/raw/process_redfin_raw/   ← code lives here
-output/raw/process_redfin_raw/   ← logs and outputs mirror here
-temp/raw/process_redfin_raw/     ← temp files if needed
-```
+## Log files
+Every script should log to `output/<stage>/<task>/<task>.log`.
+- **Stata batch mode:** `stata-mp -e do source/0_raw/<task>/<task>.do`
+- **R:** `sink("output/2_analysis/<task>/<task>.log", split = TRUE)`
+- **Jupyter:** export executed notebook to `output/2_analysis/<task>/<task>.ipynb`
 
-Data output folders in `data/` use **standalone dataset names** (not mirrored) because they are shared across multiple downstream tasks.
+## lib/
+Shared helper scripts used across multiple tasks.
+- `.ado` files for Stata
+- `.R` files for shared R functions
+- `.py` modules for shared Python utilities

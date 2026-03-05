@@ -1,39 +1,43 @@
-# Temporary files — always reproducible, never sync
-temp/
+# -----------------------------------------------------------------------
+# .gitignore  –  RA Template  (Franklin Qian Manual conventions)
+# -----------------------------------------------------------------------
+# Committed:   source/, data/, output/, temp/, docs/, run_all.py, README.md
+# Languages:   Stata (.do), R (.R), Python (.py), Jupyter (.ipynb)
+# -----------------------------------------------------------------------
 
-# Large data files — store on Dropbox/Google Drive, not version control
-data/
+# Raw data – uncomment if data is large/sensitive (store on Dropbox instead)
+# data/raw/*
+# !data/raw/.gitkeep
 
-# Stata output files
-*.log
-*.smcl
+# Quarto build artifacts (compiled PDFs are committed; build cache is not)
+*_files/
+.quarto/
 
-# OS / editor artifacts
-.DS_Store
-Thumbs.db
-desktop.ini
-*.swp
-*.swo
-*~
-.venv/
-
-# Python
-__pycache__/
-*.pyc
-*.pyo
-.ipynb_checkpoints/
-
-# R
+# R artifacts
 .Rhistory
 .RData
 .Rproj.user/
+renv/library/
+renv/local/
+renv/staging/
 
-# LaTeX build artifacts
-*.aux
-*.bbl
-*.blg
-*.fls
-*.fdb_latexmk
-*.synctex.gz
-*.out
-*.toc
+# Jupyter artifacts
+**/.ipynb_checkpoints/
+
+# Stata temporary / batch files
+*.smcl
+*.stswp
+*.~do
+*.~dta
+*.log
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.bak
+*~
+
+# Python / virtual environment
+.venv/
+__pycache__/
+*.pyc

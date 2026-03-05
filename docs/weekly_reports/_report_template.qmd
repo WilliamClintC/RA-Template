@@ -1,0 +1,119 @@
+---
+title: "Task <N>: <Purpose>"
+subtitle: "PROJECT NAME – UNC Kenan-Flagler Business School"
+author: 
+  - name: "William Clinton Co"
+    email: "clinton.will.c@gmail.com"
+date: today
+date-format: "MMMM D, YYYY"
+abstract: |
+  Brief summary of this week's progress.
+
+format:
+  pdf:
+    fig-pos: "H"
+    documentclass: article
+    include-in-header:
+      text: |
+        \usepackage{float}
+    toc: true
+    number-sections: true
+    geometry:
+      - margin=1in
+---
+
+<!--
+=============================================================================
+RELATIVE PATH REFERENCE  (this file lives in docs/weekly_reports/)
+=============================================================================
+All paths are relative to THIS file's location.
+
+  Raw data:          ../../data/0_raw/<dataset>/
+  Processed data:    ../../data/1_derived/<dataset>/
+  Figures:           ../../output/2_analysis/figures/<figure>.png
+  LaTeX tables:      ../../output/2_analysis/tables/<table>.tex
+  Temp files:        ../../temp/2_analysis/<task>/
+
+R example (knitr chunk):
+  data <- read.csv("../../data/1_derived/<dataset>.csv")
+  # or with here():
+  # data <- read.csv(here::here("data/1_derived/<dataset>.csv"))
+
+Figure example:
+  ![Caption](../../output/2_analysis/figures/<figure>.png){#fig-label}
+
+LaTeX table example:
+  ```{=latex}
+  \input{../../output/2_analysis/tables/<table>.tex}
+  ```
+
+Rule: NEVER use absolute paths. If you move this file, update paths accordingly.
+=============================================================================
+-->
+
+# This Week's Progress
+
+Brief narrative of what was accomplished.
+
+## Tasks Completed
+
+- Task 1
+- Task 2
+
+## Tasks In Progress
+
+- Task in progress 1
+
+# Data Work
+
+## Data Cleaning
+
+Describe any data cleaning steps taken.
+
+## Summary Statistics
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| label: tbl-summary-stats
+#| tbl-cap: "Summary Statistics"
+
+# library(knitr)
+# data <- read.csv("../../data/1_derived/<dataset>.csv")
+# kable(data)
+```
+
+## Figures
+
+<!-- 
+![Caption](../../output/2_analysis/figures/<figure>.png){#fig-label}
+-->
+
+# Analysis
+
+## Regression Results
+
+```{=latex}
+% \input{../../output/2_analysis/tables/<table>.tex}
+```
+
+## Interpretation
+
+Notes on results.
+
+# Issues and Questions
+
+List any blockers, data quality concerns, or methodological questions for the PI.
+
+1. 
+2. 
+
+# Next Steps
+
+- [ ] Task for next week 1
+- [ ] Task for next week 2
+
+# Appendix {.appendix}
+
+Supporting tables, robustness checks, or supplementary figures.

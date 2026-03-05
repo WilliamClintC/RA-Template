@@ -1,33 +1,31 @@
 # docs/
 
-Project documentation and RA progress reports.
+Project documentation.
 
-## weekly_reports/
+## Subdirectories
 
-Weekly progress updates — one subfolder per RA, named after them.
+### weekly_reports/
+RA progress reports, one `.qmd` file per week, compiled to PDF via Quarto.
 
-```
-docs/weekly_reports/
-    <your_name>/
-        task01_sumstats_<your_name>_2026-03-01.pdf
-        task02_regressions_<your_name>_2026-03-08.pdf
-```
+**Template:** `weekly_reports/_report_template.qmd` (underscore prefix keeps it sorted to the top)
 
-### File naming convention
+Naming convention: `YYYYMMDD_task<N>_<purpose>_<name>.qmd`  
+Example: `20260305_task1_sumstats_clintonco.qmd`
 
-`<task_or_purpose>_<your_name>_<YYYY-MM-DD>.<ext>`
+Date-first naming ensures VS Code Explorer automatically sorts reports newest-to-oldest.
+The `.qmd` title should match: `Task <N>: <Purpose>`.
 
-### Format
+Workflow:
+1. Copy `_report_template.qmd` → `YYYYMMDD_task<N>_<purpose>_<name>.qmd`
+2. Fill in sections: Progress, Data Work, Analysis, Issues, Next Steps
+3. Compile: `quarto render YYYYMMDD_task<N>_<purpose>_<name>.qmd`
+4. Commit both the `.qmd` source and the rendered `.pdf`
 
-Write reports as a **PDF (LaTeX/Overleaf)** or **Beamer slides**. Each update should include:
+Path conventions inside `.qmd` files:
+- Data: `../../data/1_derived/<dataset>.csv`
+- Figures: `../../output/2_analysis/figures/<figure>.png`
+- Tables: `../../output/2_analysis/tables/<table>.tex`
 
-1. Summary of what was completed this week
-2. Key results (tables, figures, or links to them)
-3. Clear paths to relevant `source/`, `data/`, and `output/` folders so results can be replicated
-4. Questions or blockers for the PI
-5. Plan for next week
-
-### Syncing
-
-Version all reports to the project Dropbox under `/docs/weekly_reports/<your_name>/`.
-Sync `docs/` to version control (reports are small text/PDF files).
+### codebooks/
+Data dictionaries, codebooks, and data use agreements for each dataset.
+One subfolder per dataset, mirroring `data/0_raw/`.
