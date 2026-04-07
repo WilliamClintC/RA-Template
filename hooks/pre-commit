@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# hooks/pre-commit
+# Blocks commits containing files larger than MAX_MB megabytes.
+# Activated automatically when run_all.py is run (sets core.hooksPath=hooks).
+
+MAX_MB=100
+MAX_BYTES=$(( MAX_MB * 1024 * 1024 ))
+
+error=0
+
+while IFS= read -r -d '' file; do
+    size=$(git cat-file -s ":$file" 2>/dev/null) || continue
+    if [[ "$size" -gt "$MAX_BYTES" ]]; then
+        mb=$(echo "scale=1; $size / 1048576" | bc)
+        echo "ERROR: '$file' is ${mb} MB — exceeds the ${MAX_MB} MB limit."
+        echo "       Remove it from the commit or add it to .gitignore."
+        error=1
+    fi
+done < <(git diff --cached --name-only -z --diff-filter=ACM)
+
+if [[ "$error" -ne 0 ]]; then
+    echo ""
+    echo "Commit aborted. No files were committed."
+    exit 1
+fi
+
+exit 0

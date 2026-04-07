@@ -108,6 +108,18 @@ def setup_logging() -> logging.Logger:
     return logger
 
 
+def setup_git_hooks(logger: logging.Logger) -> None:
+    """Point git's hooksPath at the tracked hooks/ directory."""
+    result = subprocess.run(
+        ["git", "config", "core.hooksPath", "hooks"],
+        cwd=ROOT, capture_output=True, text=True,
+    )
+    if result.returncode == 0:
+        logger.info("Git hooks configured: core.hooksPath=hooks")
+    else:
+        logger.warning(f"Could not configure git hooks: {result.stderr.strip()}")
+
+
 def ensure_dirs(logger: logging.Logger) -> None:
     for d in REQUIRED_DIRS:
         path = ROOT / d
@@ -216,6 +228,7 @@ def main() -> None:
     logger.info(f"run_all.py — {datetime.datetime.now():%Y-%m-%d %H:%M}{dry_tag}")
     logger.info(f"Project root: {ROOT}")
 
+    setup_git_hooks(logger)
     ensure_dirs(logger)
     check_executables(logger)
 

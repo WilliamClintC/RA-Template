@@ -5,9 +5,9 @@
 # Languages:   Stata (.do), R (.R), Python (.py), Jupyter (.ipynb)
 # -----------------------------------------------------------------------
 
-# Raw data – uncomment if data is large/sensitive (store on Dropbox instead)
-# data/raw/*
-# !data/raw/.gitkeep
+# Raw data – large/sensitive files live on Dropbox/Drive, not in git
+# data/0_raw/<large_file>.csv
+# data/1_derived/<large_file>.csv
 
 # Quarto build artifacts (compiled PDFs are committed; build cache is not)
 *_files/
@@ -31,6 +31,9 @@ renv/staging/
 *.~dta
 *.log
 
+# Claude Code settings
+.claude/settings.local.json
+
 # OS / editor noise
 .DS_Store
 Thumbs.db
@@ -39,5 +42,59 @@ Thumbs.db
 
 # Python / virtual environment
 .venv/
+venv/
 __pycache__/
 *.pyc
+
+# -----------------------------------------------------------------------
+# Large files  –  GitHub hard limit is 100 MB; warn at 50 MB
+# .gitignore cannot filter by size, so common large-file types are listed
+# here. A pre-commit hook at hooks/pre-commit enforces the 100 MB
+# limit on any file type not caught by the patterns below.
+# -----------------------------------------------------------------------
+
+# Large data formats
+*.dta
+*.parquet
+*.feather
+*.arrow
+*.pkl
+*.pickle
+*.h5
+*.hdf5
+*.nc
+*.mat
+*.sas7bdat
+*.db
+*.sqlite
+*.sqlite3
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.tar.bz2
+*.7z
+*.rar
+*.gz
+*.bz2
+
+# Large media
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.wmv
+*.mp3
+*.wav
+*.flac
+
+# Large images / GIS
+*.tif
+*.tiff
+*.geotiff
+*.shp
+*.shx
+*.dbf
+*.gdb/
