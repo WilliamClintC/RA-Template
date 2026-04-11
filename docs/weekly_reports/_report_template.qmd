@@ -76,6 +76,15 @@ Describe any data cleaning steps taken.
 #| echo: false
 #| message: false
 #| warning: false
+#| label: setup
+
+source(here::here("source/lib/theme_healy.R"))
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
 #| label: tbl-summary-stats
 #| tbl-cap: "Summary Statistics"
 

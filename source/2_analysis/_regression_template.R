@@ -23,6 +23,8 @@ library(haven)
 library(fixest)        # feols() for OLS / IV / FE regressions
 library(modelsummary)  # regression tables
 
+source(here("source/lib/theme_healy.R"))  # ggplot2 theme (Healy defaults)
+
 # ---------------------------------------------------------------------------
 # 0. Setup
 # ---------------------------------------------------------------------------
@@ -73,9 +75,9 @@ dir.create(here("output/2_analysis/figures"), showWarnings = FALSE, recursive = 
 # p <- ggplot(df, aes(x = x1, y = y)) +
 #   geom_point(alpha = 0.4) +
 #   geom_smooth(method = "lm") +
-#   theme_bw()
-# ggsave(here("output/2_analysis/figures/fig_<task_name>.pdf"), p,
-#        width = 6, height = 4)
+#   labs(x = "X1", y = "Y", title = "<Title>",
+#        caption = "Source: <source>")
+# healy_save(here("output/2_analysis/figures/fig_<task_name>.pdf"), p)
 
 # ---------------------------------------------------------------------------
 # Done

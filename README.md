@@ -54,6 +54,26 @@ for a task called `<task>` at stage `<stage>` live at:
 | Log / output  | `output/<0_raw\|1_derived\|2_analysis>/<task>/` |
 | Data files    | `data/<0_raw\|1_derived>/<dataset_name>/`        |
 
+## Visualization Defaults
+
+All figure templates use shared theme files based on the principles in:
+
+> Healy, Kieran. 2018. *Data Visualization: A Practical Introduction.* Princeton University Press. [https://socviz.co/](https://socviz.co/)
+
+| File | Language | How to use |
+|------|----------|------------|
+| `source/lib/theme_healy.R` | R / ggplot2 | `source(here::here("source/lib/theme_healy.R"))` |
+| `source/lib/theme_healy.py` | Python / matplotlib | `from source.lib.theme_healy import apply_theme; apply_theme()` |
+
+**What the theme enforces:**
+
+- **Minimal base** -- built on `theme_minimal()` (R) / spines-off (Python); no chart junk (Healy ch. 8)
+- **Colorblind-safe palettes** -- ColorBrewer "Set2" for categorical, viridis for continuous (Healy ch. 1)
+- **Clean gridlines** -- minor gridlines removed, major gridlines light grey (Healy ch. 8)
+- **Small multiples over color overload** -- prefer `facet_wrap()` / `facet_grid()` when groups exceed ~8 (Healy ch. 4)
+- **Clear labels** -- use `labs()` for titles, subtitles, axis labels, and source captions (Healy ch. 3)
+- **Publication-quality export** -- `healy_save()` defaults to 6x4 in, 300 DPI, white background (Healy ch. 8)
+
 ## Replication
 
 **Run the full pipeline** from the project root:

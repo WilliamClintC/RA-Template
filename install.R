@@ -41,6 +41,8 @@ pkgs <- c(
   "ggthemes",        # additional ggplot2 themes
   "scales",          # axis formatting helpers
   "patchwork",       # combine ggplot2 panels
+  "viridis",         # perceptually uniform, colorblind-safe palettes
+  "RColorBrewer",    # ColorBrewer palettes (Healy-recommended defaults)
 
   # ----- Geospatial ----------------------------------------------------
   "sf",              # simple features for R
